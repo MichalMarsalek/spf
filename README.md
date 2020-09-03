@@ -24,10 +24,14 @@ Performs the precalculation up to *precomputed_n < 2<sup>31</sup>*. This *must* 
 
 * ```spf.spf(n: int) -> int```  
 Returns *spf(n)*. Case of *n > precomputed_n* is supported (via trial division). If the result is negative, it means that
-no prime in the precomputed range divides it, but it might be a composite.
+no prime in the precomputed range divides it, but it might be a composite.  
+This affects other functions,
+for example if `precomputed_n = 10**7` then,  
+`spf.factors(2 * 3 * 113 * 1125899906842679)` returns `[2, 3, 113, -1125899906842679]` because based on the precomputed primes we don't know if there isn't any divisor of 1125899906842679.  
+If `precomputed_n = 10**7` it returns `[2, 3, 113, 1125899906842679]`.
 
 * ```spf.phi(n: int) -> n```  
-Calculates *φ(n)*. If the result is negative, it's means that its absolute value is the correct value ⇔ n has just one prime factor above the precomputed range.
+Calculates *φ(n)*. If the result is negative, it means that its absolute value is the correct value ⇔ n has just one prime factor above the precomputed range.  
 
 * ```spf.pi(n: int) -> n```  
 Calculates *π(n)*. If *n > precalculated_n*, performs a new calculation.

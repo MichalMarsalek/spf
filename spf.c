@@ -62,16 +62,19 @@ Returns spf(n) (smallest prime factor of n) provided n is odd.
 Case of n > precomputed_n is supported (via trial division), provided spf(n) < precomputed_n.
 */
 //TODO: use all primes
-static long _spfOdd(long long n){
+static long long _spfOdd(long long n){
 	//iterate tru odd primes upto sqrt(n) and return the first one that divides n
 	if(n > precomputed_n){
 		for(long i = 1; i < primes_count; i++){
-			if(n % primes[i] == 0)
-				return primes[i];
-			if(primes[i]*primes[i] > n)
-				break;
+			long long prime = primes[i];
+			if(n % prime == 0){
+				return prime;
+			}
+			if(prime*prime > n){
+				return n;
+			}
 		}
-		return -1; //TODO: error -> spf(n) >= precomputed_n
+		return -n;
 	}
 	return spf[n>>1]; //n is odd and small => we have it precomputed
 }
@@ -80,11 +83,11 @@ Returns spf(n).
 Case of n > precomputed_n is supported (via trial division), provided spf(n) < precomputed_n.
 */
 //TODO: use all primes
-static long _spf(long long n){
+static long long _spf(long long n){
 	if(n & 1){
 		return _spfOdd(n);
 	}
-	return 2;
+	return 2L;
 }
 
 
@@ -173,9 +176,9 @@ static PyObject* factorisation(PyObject* self, PyObject* args){
 		i >>= 1;
 	}
 	while(i > 1){
-		long factor = _spfOdd(i);		
+		long long factor = _spfOdd(i);		
 		i /= factor;		
-		PyList_Append(result, PyLong_FromLong(factor));
+		PyList_Append(result, PyLong_FromLongLong(factor));
 	}
 	return result;
 }
@@ -195,10 +198,10 @@ static PyObject* factors(PyObject* self, PyObject* args){
 		}
 	}
 	while(i > 1){
-		long factor = _spfOdd(i);
+		long long factor = _spfOdd(i);
 		while(i % factor == 0)
 			i /= factor;
-		PyList_Append(result, PyLong_FromLong(factor));
+		PyList_Append(result, PyLong_FromLongLong(factor));
 	}
 	return result;
 }
